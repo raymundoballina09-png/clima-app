@@ -68,6 +68,31 @@ async function consultarClima(ciudad) {
         resultado.classList.remove('visible');
     }
 }
+async function pronostico() {
+
+    const ciudad = document.getElementById("ciudad").value;
+
+    const url = "https://api.openweathermap.org/data/2.5/forecast?q=" +
+        encodeURIComponent(ciudad) +
+        "&appid=" + API_KEY +
+        "&units=metric&lang=es";
+
+    const respuesta = await fetch(url);
+    const datos = await respuesta.json();
+
+    let texto = "<h2>Pronóstico de 5 días</h2>";
+
+    for (let i = 0; i < datos.list.length; i += 8) {
+
+        texto += "<p>" +
+            datos.list[i].dt_txt + " - " +
+            datos.list[i].main.temp + "°C - " +
+            datos.list[i].weather[0].description +
+            "</p>";
+    }
+
+    document.getElementById("pronostico").innerHTML = texto;
+}
 function obtenerUbicacion() {
     navigator.geolocation.getCurrentPosition(async (posicion) => {
 
