@@ -110,6 +110,34 @@ function obtenerUbicacion() {
             "<p>Clima: " + datos.weather[0].description + "</p>";
     });
 }
+function guardarHistorial(ciudad) {
+
+    let historial = JSON.parse(localStorage.getItem("historial")) || [];
+
+    historial.push(ciudad);
+
+    historial = historial.slice(-5);
+
+    localStorage.setItem("historial", JSON.stringify(historial));
+
+    mostrarHistorial();
+}
+
+function mostrarHistorial() {
+
+    let historial = JSON.parse(localStorage.getItem("historial")) || [];
+
+    let texto = "";
+
+    historial.forEach(function(ciudad) {
+
+        texto += "<button onclick=\"buscarCiudad('" + ciudad + "')\">" +
+            ciudad +
+            "</button>";
+    });
+
+    document.getElementById("historial").innerHTML = texto;
+}
 
 // ============================================
 // FUNCIÓN: MOSTRAR EL CLIMA EN EL DOM
