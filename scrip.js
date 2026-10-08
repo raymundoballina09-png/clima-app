@@ -3,7 +3,7 @@
 // ============================================
 
 // REEMPLAZA ESTA API KEY CON LA TUYA
-const API_KEY = 'TU_API_KEY_AQUI';
+const API_KEY = 'a51fb38faed7e807106b1947be8067e8';
 
 const API_URL = 'https://api.openweathermap.org/data/2.5/weather';
 
