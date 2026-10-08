@@ -68,6 +68,23 @@ async function consultarClima(ciudad) {
         resultado.classList.remove('visible');
     }
 }
+function obtenerUbicacion() {
+    navigator.geolocation.getCurrentPosition(async (posicion) => {
+
+        const lat = posicion.coords.latitude;
+        const lon = posicion.coords.longitude;
+
+        const url = "https://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon + "&appid=" + API_KEY + "&units=metric&lang=es";
+
+        const respuesta = await fetch(url);
+        const datos = await respuesta.json();
+
+        document.getElementById("resultado").innerHTML =
+            "<h2>" + datos.name + "</h2>" +
+            "<p>Temperatura: " + datos.main.temp + "°C</p>" +
+            "<p>Clima: " + datos.weather[0].description + "</p>";
+    });
+}
 
 // ============================================
 // FUNCIÓN: MOSTRAR EL CLIMA EN EL DOM
