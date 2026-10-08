@@ -48,6 +48,8 @@ async function consultarClima(ciudad) {
 
             } else {
                 throw new Error('Error en la petición: ' + respuesta.status);
+                guardarHistorial(ciudad);
+                mostrarHistorial();
             }
         }
 
