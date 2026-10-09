@@ -318,24 +318,25 @@ function cambiarTema() {
 // COMPARTIR EN WHATSAPP
 // ============================================
 
+
 function compartirWhatsApp() {
 
     const ciudad = resultado.querySelector('.ciudad');
     const temperatura = resultado.querySelector('.temperatura');
     const descripcion = resultado.querySelector('.descripcion');
 
-    if (!ciudad || !temperatura) {
+    if (!ciudad || !temperatura || !descripcion) {
         estado.textContent = 'Primero consulta el clima de una ciudad.';
         return;
     }
 
     const mensaje = 'El clima en ' + ciudad.textContent +
         ' es de ' + temperatura.textContent +
-        '. Estado: ' + descripcion.textContent;
+        '. Estado: ' + descripcion.textContent + '.';
 
     const url = 'https://wa.me/?text=' + encodeURIComponent(mensaje);
 
-    window.open(url, '_blank');
+    window.location.href = url;
 }
 
 // ============================================
