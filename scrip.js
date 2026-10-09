@@ -312,7 +312,7 @@ function obtenerUbicacion() {
 function cambiarTema() {
     document.body.classList.toggle('claro');
 }
-}
+
 
 // ============================================
 // COMPARTIR EN WHATSAPP
