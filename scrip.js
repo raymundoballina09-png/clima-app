@@ -1,15 +1,11 @@
-// ============================================
-// CONFIGURACIÓN
-// ============================================
 
-// REEMPLAZA ESTA API KEY CON LA TUYA
-const API_KEY = 'a51fb38faed7e807106b1947be8067e8';
+ // ============================================
+ // CONFIGURACION
+ // ============================================
+
+const API_KEY = 'TU_API_KEY_AQUI';
 
 const API_URL = 'https://api.openweathermap.org/data/2.5/weather';
-
-// ============================================
-// REFERENCIAS AL DOM
-// ============================================
 
 const formulario = document.getElementById('formulario');
 const inputCiudad = document.getElementById('inputCiudad');
@@ -17,47 +13,40 @@ const resultado = document.getElementById('resultado');
 const estado = document.getElementById('estado');
 
 // ============================================
-// FUNCIÓN PRINCIPAL: CONSULTAR CLIMA
+// CONSULTAR CLIMA
 // ============================================
 
 async function consultarClima(ciudad) {
 
-    // Mostrar estado de carga
     estado.textContent = '🔄 Consultando el clima...';
     resultado.classList.remove('visible');
 
     try {
 
-        // Codificar la ciudad para la URL
         const ciudadCodificada = encodeURIComponent(ciudad);
 
-        // Construir la URL con parámetros
-        const url = `${API_URL}?q=${ciudadCodificada}&appid=${API_KEY}&units=metric&lang=es`;
+        const url = API_URL + '?q=' + ciudadCodificada +
+            '&appid=' + API_KEY + '&units=metric&lang=es';
 
-        // Hacer la petición
         const respuesta = await fetch(url);
 
-        // Verificar si la respuesta fue exitosa
         if (!respuesta.ok) {
 
             if (respuesta.status === 404) {
                 throw new Error('Ciudad no encontrada');
-
             } else if (respuesta.status === 401) {
-                throw new Error('API Key inválida');
-
+                throw new Error('API Key invalida');
             } else {
-                throw new Error('Error en la petición: ' + respuesta.status);
-                guardarHistorial(ciudad);
-                mostrarHistorial();
+                throw new Error('Error en la peticion: ' + respuesta.status);
             }
         }
 
-        // Convertir a JSON
         const datos = await respuesta.json();
 
-        // Mostrar los datos
         mostrarClima(datos);
+
+        // GUARDAR CIUDAD EN EL HISTORIAL
+        guardarHistorial(datos.name);
 
         estado.textContent = '✅ Datos actualizados correctamente.';
 
@@ -65,89 +54,19 @@ async function consultarClima(ciudad) {
 
         console.error('Error:', error);
 
-        estado.textContent = `❌ ${error.message}. Intenta con otra ciudad.`;
+        estado.textContent = '❌ ' + error.message +
+            '. Intenta con otra ciudad.';
 
         resultado.classList.remove('visible');
     }
 }
-async function pronostico() {
-
-    const ciudad = document.getElementById("ciudad").value;
-
-    const url = "https://api.openweathermap.org/data/2.5/forecast?q=" +
-        encodeURIComponent(ciudad) +
-        "&appid=" + API_KEY +
-        "&units=metric&lang=es";
-
-    const respuesta = await fetch(url);
-    const datos = await respuesta.json();
-
-    let texto = "<h2>Pronóstico de 5 días</h2>";
-
-    for (let i = 0; i < datos.list.length; i += 8) {
-
-        texto += "<p>" +
-            datos.list[i].dt_txt + " - " +
-            datos.list[i].main.temp + "°C - " +
-            datos.list[i].weather[0].description +
-            "</p>";
-    }
-
-    document.getElementById("pronostico").innerHTML = texto;
-}
-function obtenerUbicacion() {
-    navigator.geolocation.getCurrentPosition(async (posicion) => {
-
-        const lat = posicion.coords.latitude;
-        const lon = posicion.coords.longitude;
-
-        const url = "https://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon + "&appid=" + API_KEY + "&units=metric&lang=es";
-
-        const respuesta = await fetch(url);
-        const datos = await respuesta.json();
-
-        document.getElementById("resultado").innerHTML =
-            "<h2>" + datos.name + "</h2>" +
-            "<p>Temperatura: " + datos.main.temp + "°C</p>" +
-            "<p>Clima: " + datos.weather[0].description + "</p>";
-    });
-}
-function guardarHistorial(ciudad) {
-
-    let historial = JSON.parse(localStorage.getItem("historial")) || [];
-
-    historial.push(ciudad);
-
-    historial = historial.slice(-5);
-
-    localStorage.setItem("historial", JSON.stringify(historial));
-
-    mostrarHistorial();
-}
-
-function mostrarHistorial() {
-
-    let historial = JSON.parse(localStorage.getItem("historial")) || [];
-
-    let texto = "";
-
-    historial.forEach(function(ciudad) {
-
-        texto += "<button onclick=\"buscarCiudad('" + ciudad + "')\">" +
-            ciudad +
-            "</button>";
-    });
-
-    document.getElementById("historial").innerHTML = texto;
-}
 
 // ============================================
-// FUNCIÓN: MOSTRAR EL CLIMA EN EL DOM
+// MOSTRAR CLIMA
 // ============================================
 
 function mostrarClima(datos) {
 
-    // Extraer datos del objeto JSON anidado
     const ciudad = datos.name;
     const pais = datos.sys.country;
     const temperatura = Math.round(datos.main.temp);
@@ -159,18 +78,13 @@ function mostrarClima(datos) {
     const icono = datos.weather[0].icon;
 
     const iconoUrl =
-        `https://openweathermap.org/img/wn/${icono}@2x.png`;
+        'https://openweathermap.org/img/wn/' + icono + '@2x.png';
 
-    // Construir el HTML del resultado
     resultado.innerHTML = `
         <div class="ciudad">${ciudad}</div>
-
         <div class="pais">${pais}</div>
-
         <img src="${iconoUrl}" alt="${descripcion}" class="icono-clima">
-
         <div class="temperatura">${temperatura}°C</div>
-
         <div class="descripcion">${descripcion}</div>
 
         <div class="detalles">
@@ -198,20 +112,17 @@ function mostrarClima(datos) {
         </div>
     `;
 
-    // Mostrar el resultado
     resultado.classList.add('visible');
 
-    // Cambiar el fondo según el clima
     cambiarFondoSegunClima(datos.weather[0].main);
 }
 
 // ============================================
-// FUNCIÓN: CAMBIAR FONDO SEGÚN EL CLIMA
+// CAMBIAR FONDO SEGUN EL CLIMA
 // ============================================
 
 function cambiarFondoSegunClima(clima) {
 
-    // Remover clases anteriores
     document.body.classList.remove(
         'clima-soleado',
         'clima-nublado',
@@ -219,7 +130,6 @@ function cambiarFondoSegunClima(clima) {
         'clima-nieve'
     );
 
-    // Agregar la clase según el clima
     const climaLower = clima.toLowerCase();
 
     if (climaLower.includes('clear')) {
@@ -245,20 +155,199 @@ function cambiarFondoSegunClima(clima) {
 }
 
 // ============================================
-// EVENTO DEL FORMULARIO
+// HISTORIAL DE LAS ULTIMAS 5 CIUDADES
 // ============================================
 
-formulario.addEventListener('submit', (e) => {
+function guardarHistorial(ciudad) {
 
-    e.preventDefault();
+    let historial = JSON.parse(
+        localStorage.getItem('historial')
+    ) || [];
 
-    // Evitar que la página se recargue
+    historial = historial.filter(function(nombre) {
+        return nombre.toLowerCase() !== ciudad.toLowerCase();
+    });
+
+    historial.push(ciudad);
+
+    historial = historial.slice(-5);
+
+    localStorage.setItem(
+        'historial',
+        JSON.stringify(historial)
+    );
+
+    mostrarHistorial();
+}
+
+function mostrarHistorial() {
+
+    const contenedor = document.getElementById('historial');
+
+    if (!contenedor) {
+        return;
+    }
+
+    let historial = JSON.parse(
+        localStorage.getItem('historial')
+    ) || [];
+
+    contenedor.innerHTML = '';
+
+    historial.forEach(function(ciudad) {
+
+        const boton = document.createElement('button');
+
+        boton.textContent = ciudad;
+
+        boton.type = 'button';
+
+        boton.onclick = function() {
+            inputCiudad.value = ciudad;
+            consultarClima(ciudad);
+        };
+
+        contenedor.appendChild(boton);
+    });
+}
+
+// ============================================
+// PRONOSTICO DE 5 DIAS
+// ============================================
+
+async function pronostico() {
+
     const ciudad = inputCiudad.value.trim();
 
     if (!ciudad) {
+        estado.textContent = 'Escribe una ciudad primero.';
+        return;
+    }
 
+    try {
+
+        const url = 'https://api.openweathermap.org/data/2.5/forecast?q=' +
+            encodeURIComponent(ciudad) +
+            '&appid=' + API_KEY +
+            '&units=metric&lang=es';
+
+        const respuesta = await fetch(url);
+        const datos = await respuesta.json();
+
+        if (!respuesta.ok) {
+            throw new Error('No se pudo obtener el pronostico.');
+        }
+
+        let texto = '<h2>Pronostico de 5 dias</h2>';
+
+        for (let i = 0; i < datos.list.length; i += 8) {
+
+            texto += '<p>' +
+                datos.list[i].dt_txt + ' - ' +
+                datos.list[i].main.temp + '°C - ' +
+                datos.list[i].weather[0].description +
+                '</p>';
+        }
+
+        document.getElementById('pronostico').innerHTML = texto;
+
+    } catch (error) {
+
+        estado.textContent = error.message;
+    }
+}
+
+// ============================================
+// GEOLOCALIZACION
+// ============================================
+
+function obtenerUbicacion() {
+
+    if (!navigator.geolocation) {
+        estado.textContent = 'Tu navegador no permite geolocalizacion.';
+        return;
+    }
+
+    navigator.geolocation.getCurrentPosition(async function(posicion) {
+
+        try {
+
+            const lat = posicion.coords.latitude;
+            const lon = posicion.coords.longitude;
+
+            const url = API_URL + '?lat=' + lat +
+                '&lon=' + lon +
+                '&appid=' + API_KEY +
+                '&units=metric&lang=es';
+
+            const respuesta = await fetch(url);
+            const datos = await respuesta.json();
+
+            if (!respuesta.ok) {
+                throw new Error('No se pudo consultar tu ubicacion.');
+            }
+
+            mostrarClima(datos);
+            guardarHistorial(datos.name);
+
+            estado.textContent = '✅ Clima de tu ubicacion actualizado.';
+
+        } catch (error) {
+
+            estado.textContent = '❌ ' + error.message;
+        }
+
+    }, function() {
+
+        estado.textContent =
+            'No se pudo obtener tu ubicacion. Revisa los permisos del navegador.';
+    });
+}
+
+// ============================================
+// MODO CLARO Y OSCURO
+// ============================================
+
+function cambiarTema() {
+    document.body.classList.toggle('claro');
+}
+
+// ============================================
+// COMPARTIR EN WHATSAPP
+// ============================================
+
+function compartirWhatsApp() {
+
+    const ciudad = resultado.querySelector('.ciudad');
+    const temperatura = resultado.querySelector('.temperatura');
+    const descripcion = resultado.querySelector('.descripcion');
+
+    if (!ciudad || !temperatura) {
+        estado.textContent = 'Primero consulta el clima de una ciudad.';
+        return;
+    }
+
+    const mensaje = 'El clima en ' + ciudad.textContent +
+        ' es de ' + temperatura.textContent +
+        '. Estado: ' + descripcion.textContent;
+
+    const url = 'https://wa.me/?text=' + encodeURIComponent(mensaje);
+
+    window.open(url, '_blank');
+}
+
+// ============================================
+// FORMULARIO DE BUSQUEDA
+// ============================================
+
+formulario.addEventListener('submit', function(e) {
+
+    e.preventDefault();
+
+    const ciudad = inputCiudad.value.trim();
+
+    if (!ciudad) {
         estado.textContent = 'Escribe el nombre de una ciudad.';
-
         return;
     }
 
@@ -266,13 +355,9 @@ formulario.addEventListener('submit', (e) => {
 });
 
 // ============================================
-// MENSAJE INICIAL
+// INICIAR PAGINA
 // ============================================
 
 estado.textContent = 'Escribe una ciudad y presiona "Consultar".';
 
-// ============================================
-// CONSULTAR CLIMA AL CARGAR (opcional)
-// ============================================
-
-// consultarClima('Mexico City');
+mostrarHistorial();
