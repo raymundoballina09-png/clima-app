@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -16,7 +17,7 @@
 
     <header>
 
-       <img src="IMG/banner.png" alt="Banner de la App del Clima" class="banner">
+        <img src="IMG/banner.png" alt="Banner de la App del Clima" class="banner">
 
         <h1>🌤️ App del Clima</h1>
 
@@ -26,6 +27,7 @@
 
     <main>
 
+        <!-- BUSCADOR -->
         <form id="formulario" class="buscador">
 
             <input
@@ -36,20 +38,49 @@
             >
 
             <button type="submit">🔍 Consultar</button>
-            <button onclick="obtenerUbicacion()">Usar mi ubicación</button>
-            <div id="resultado"></div>
-            <button onclick="pronostico()">Pronóstico de 5 días</button>
-
-             <div id="pronostico"></div>
-            <h2>Historial de búsquedas</h2>
-
-            <div id="historial"></div>
 
         </form>
 
+        <!-- BOTONES ADICIONALES -->
+        <div class="botones-extra">
+
+            <button type="button" onclick="obtenerUbicacion()">
+                📍 Usar mi ubicación
+            </button>
+
+            <button type="button" onclick="pronostico()">
+                📅 Pronóstico de 5 días
+            </button>
+
+            <button type="button" onclick="cambiarTema()">
+                🌙 Cambiar tema
+            </button>
+
+            <button type="button" onclick="compartirWhatsApp()">
+                📱 Compartir en WhatsApp
+            </button>
+
+        </div>
+
+        <!-- MENSAJES -->
+        <p id="estado"></p>
+
+        <!-- RESULTADO DEL CLIMA -->
         <div id="resultado" class="resultado"></div>
 
-        <p id="estado"></p>
+        <!-- PRONOSTICO -->
+        <div id="pronostico"></div>
+
+        <!-- HISTORIAL -->
+        <section class="seccion-historial">
+
+            <h2>🕘 Historial de búsquedas</h2>
+
+            <p>Presiona una ciudad para consultar su clima otra vez.</p>
+
+            <div id="historial"></div>
+
+        </section>
 
     </main>
 
