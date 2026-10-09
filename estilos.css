@@ -231,4 +231,28 @@ footer {
     .banner {
         max-width: 100%;
     }
+    
+/* MODO CLARO */
+body.claro {
+    background: #f2f6fc;
+    color: #222222;
+}
+
+body.claro header,
+body.claro main,
+body.claro footer {
+    color: #222222;
+}
+
+body.claro .buscador,
+body.claro .resultado,
+body.claro .seccion-historial {
+    background-color: #ffffff;
+    color: #222222;
+}
+
+body.claro input {
+    background-color: #ffffff;
+    color: #222222;
+}
 }
