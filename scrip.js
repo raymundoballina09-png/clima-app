@@ -308,8 +308,10 @@ function obtenerUbicacion() {
 // MODO CLARO Y OSCURO
 // ============================================
 
+
 function cambiarTema() {
     document.body.classList.toggle('claro');
+}
 }
 
 // ============================================
